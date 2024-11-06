@@ -10,10 +10,12 @@ namespace backend.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
-        public UserService(IUserRepository userRepository, UserManager<User> userManager)
+        private readonly IFileService _fileService;
+        public UserService(IUserRepository userRepository, UserManager<User> userManager, IFileService fileService)
         {
             _userRepository = userRepository; 
             _userManager = userManager;
+            _fileService = fileService;
         }
         public async Task<CreateDto> CreateUserAsync(RegisterDto registerDto)
         {
@@ -52,7 +54,8 @@ namespace backend.Services
                 Email = user.Email,
                 Name = user.Name,
                 LastName = user.LastName,
-                DateOfBirth = user.DateOfBirth
+                DateOfBirth = user.DateOfBirth,
+                ProfilePhotoUrl = user.ProfilePhotoUrl
             };
 
             return Result.Success<UserDto, MessageDto>(userToReturn);
@@ -72,6 +75,19 @@ namespace backend.Services
             user.Name = updateUserDto.Name;
             user.LastName = updateUserDto.LastName;
             user.DateOfBirth = updateUserDto.DateOfBirth ?? DateOnly.MinValue;
+
+            if (updateUserDto.ProfilePhoto != null)
+            {
+                var photoResult = await _fileService.UploadFileAsync(updateUserDto.ProfilePhoto);
+
+                if (photoResult.IsFailure)
+                {
+                    errorMessages.Add(photoResult.Error.Message);
+                }
+
+                _fileService.DeleteFile(user.ProfilePhotoUrl);
+                user.ProfilePhotoUrl = photoResult.Value;
+            }
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

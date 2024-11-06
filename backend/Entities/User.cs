@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 
 namespace backend.Entities
 {
@@ -8,5 +7,6 @@ namespace backend.Entities
         public string Name { get; set; }
         public string LastName { get; set; }
         public DateOnly DateOfBirth { get; set; }
+        public string ProfilePhotoUrl { get; set; }
     }
 }

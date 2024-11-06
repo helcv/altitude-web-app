@@ -10,5 +10,6 @@ namespace backend.DTOs
         public string LastName { get; set; }
         [Required]
         public DateOnly? DateOfBirth { get; set; }
+        public IFormFile ProfilePhoto { get; set; }
     }
 }

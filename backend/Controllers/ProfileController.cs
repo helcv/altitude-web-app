@@ -34,7 +34,7 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpPut("details")]
-        public async Task<IActionResult> UpdateUserDetailsAsync(UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateUserDetailsAsync([FromForm] UpdateUserDto updateUserDto)
         {
             var currentUserId = (_contextAccessor.HttpContext.User).GetUserId();
 

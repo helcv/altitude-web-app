@@ -5,6 +5,7 @@
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public  string ProfilePhotoUrl { get; set; }
         public DateOnly DateOfBirth { get; set; }
     }
 }
