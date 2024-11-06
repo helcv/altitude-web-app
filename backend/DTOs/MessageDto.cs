@@ -1,6 +1,6 @@
 ﻿namespace backend.DTOs
 {
-    public class ErrorMessageDto
+    public class MessageDto
     {
         public string Message { get; set; }
     }

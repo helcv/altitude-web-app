@@ -5,6 +5,6 @@ namespace backend.Interfaces
 {
     public interface IAuthService
     {
-        Task<Result<TokenDto, ErrorMessageDto>> LoginAsync(LoginDto loginDto);
+        Task<Result<TokenDto, MessageDto>> LoginAsync(LoginDto loginDto);
     }
 }

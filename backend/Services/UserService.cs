@@ -39,12 +39,12 @@ namespace backend.Services
             return new CreateDto { Id = userToRegister.Id, Messages = messages };
         }
 
-        public async Task<Result<UserDto, ErrorMessageDto>> GetProfileAsync(string id)
+        public async Task<Result<UserDto, MessageDto>> GetProfileAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return Result.Failure<UserDto, ErrorMessageDto>(new ErrorMessageDto { Message = "User does not exist." });
+                return Result.Failure<UserDto, MessageDto>(new MessageDto { Message = "User does not exist." });
             }
 
             var userToReturn = new UserDto
@@ -55,7 +55,33 @@ namespace backend.Services
                 DateOfBirth = user.DateOfBirth
             };
 
-            return Result.Success<UserDto, ErrorMessageDto>(userToReturn);
+            return Result.Success<UserDto, MessageDto>(userToReturn);
+        }
+
+        public async Task<Result<MessageDto, IEnumerable<string>>> UpdateUserDetailsAsync(string id, UpdateUserDto updateUserDto)
+        {
+            var errorMessages = new List<string>();
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                errorMessages.Add("User does not exist.");
+                return Result.Failure<MessageDto, IEnumerable<string>>(errorMessages);
+            }
+
+            user.Name = updateUserDto.Name;
+            user.LastName = updateUserDto.LastName;
+            user.DateOfBirth = updateUserDto.DateOfBirth ?? DateOnly.MinValue;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                errorMessages.AddRange(result.Errors.Select(error => error.Description));
+                return Result.Failure<MessageDto, IEnumerable<string>>(errorMessages);
+            }
+
+            return Result.Success<MessageDto, IEnumerable<string>>(new MessageDto { Message = "User successfully updated." });
+
         }
     }
 }

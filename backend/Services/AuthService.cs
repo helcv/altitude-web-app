@@ -17,18 +17,18 @@ namespace backend.Services
             _userManager = userManager;
             _tokenHandler = tokenHandler;
         }
-        public async Task<Result<TokenDto, ErrorMessageDto>> LoginAsync(LoginDto loginDto)
+        public async Task<Result<TokenDto, MessageDto>> LoginAsync(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null)
             {
-                return Result.Failure<TokenDto, ErrorMessageDto>(new ErrorMessageDto { Message = "Invalid email."});
+                return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Invalid email."});
             }
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!result)
             {
-                return Result.Failure<TokenDto, ErrorMessageDto>(new ErrorMessageDto { Message = "Invalid password." });
+                return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Invalid password." });
             }
 
             var tokenDto = new TokenDto
@@ -37,7 +37,7 @@ namespace backend.Services
                 Token = _tokenHandler.CreateToken(user),
             };
 
-            return Result.Success<TokenDto, ErrorMessageDto>(tokenDto);
+            return Result.Success<TokenDto, MessageDto>(tokenDto);
         }
     }
 }

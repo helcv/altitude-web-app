@@ -1,4 +1,5 @@
-﻿using backend.Extensions;
+﻿using backend.DTOs;
+using backend.Extensions;
 using backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,18 @@ namespace backend.Controllers
             var currentUserId = (_contextAccessor.HttpContext.User).GetUserId();
 
             var result = await _userService.GetProfileAsync(currentUserId);
+            if (result.IsFailure) return BadRequest(result.Error);
+
+            return Ok(result.Value);
+        }
+
+        [Authorize]
+        [HttpPut("details")]
+        public async Task<IActionResult> UpdateUserDetailsAsync(UpdateUserDto updateUserDto)
+        {
+            var currentUserId = (_contextAccessor.HttpContext.User).GetUserId();
+
+            var result = await _userService.UpdateUserDetailsAsync(currentUserId, updateUserDto);
             if (result.IsFailure) return BadRequest(result.Error);
 
             return Ok(result.Value);
