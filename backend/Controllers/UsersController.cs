@@ -1,5 +1,7 @@
-﻿using backend.DTOs;
+﻿using backend.Constants;
+using backend.DTOs;
 using backend.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +22,15 @@ namespace backend.Controllers
         {
             var result = await _userService.CreateUserAsync(registerDto);
             if (result.Id == null) return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsersAsync()
+        {
+            var result = await _userService.GetAllUsersAsync();
 
             return Ok(result);
         }

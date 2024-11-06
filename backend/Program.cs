@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using backend.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
+using backend.Helpers;
 
 namespace backend
 {
@@ -50,6 +52,8 @@ namespace backend
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IAuthTokenHandler, AuthTokenHandler>();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
 
             builder.Services.AddIdentityCore<User>(opt =>
             {

@@ -6,6 +6,7 @@ namespace backend.Interfaces
     {
         Task AddUserAsync(User user);
         void UpdateUser(User user);
+        IQueryable<User> GetAllUsers();
         Task<bool> SaveAllAsync();
     }
 }

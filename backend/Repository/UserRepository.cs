@@ -25,5 +25,10 @@ namespace backend.Repository
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public IQueryable<User> GetAllUsers()
+        {
+            return _context.Users;
+        }
     }
 }

@@ -1,9 +1,11 @@
-﻿using backend.Constants;
+﻿using AutoMapper;
+using backend.Constants;
 using backend.DTOs;
 using backend.Entities;
 using backend.Interfaces;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
 {
@@ -12,8 +14,11 @@ namespace backend.Services
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
         private readonly IFileService _fileService;
-        public UserService(IUserRepository userRepository, UserManager<User> userManager, IFileService fileService)
+        private readonly IMapper _mapper;
+        public UserService(IUserRepository userRepository, UserManager<User> userManager, 
+                IFileService fileService, IMapper mapper)
         {
+            _mapper = mapper;
             _userRepository = userRepository; 
             _userManager = userManager;
             _fileService = fileService;
@@ -47,6 +52,13 @@ namespace backend.Services
 
             messages.Add("User successfully created!");
             return new CreateDto { Id = userToRegister.Id, Messages = messages };
+        }
+
+        public async Task<List<UserDto>> GetAllUsersAsync()
+        {
+            var users = await _userRepository.GetAllUsers().ToListAsync();
+
+            return _mapper.Map<List<UserDto>>(users);
         }
 
         public async Task<Result<UserDto, MessageDto>> GetProfileAsync(string id)
