@@ -4,6 +4,6 @@ namespace backend.Authentication
 {
     public interface IAuthTokenHandler
     {
-        string CreateToken(User user);
+        Task<string> CreateToken(User user);
     }
 }

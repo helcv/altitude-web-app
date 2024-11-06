@@ -34,7 +34,7 @@ namespace backend.Services
             var tokenDto = new TokenDto
             {
                 Id = user.Id,
-                Token = _tokenHandler.CreateToken(user),
+                Token = await _tokenHandler.CreateToken(user),
             };
 
             return Result.Success<TokenDto, MessageDto>(tokenDto);
