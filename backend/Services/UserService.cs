@@ -1,6 +1,7 @@
 ﻿using backend.DTOs;
 using backend.Entities;
 using backend.Interfaces;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace backend.Services
@@ -36,6 +37,25 @@ namespace backend.Services
 
             messages.Add("User successfully created!");
             return new CreateDto { Id = userToRegister.Id, Messages = messages };
+        }
+
+        public async Task<Result<UserDto, ErrorMessageDto>> GetProfileAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return Result.Failure<UserDto, ErrorMessageDto>(new ErrorMessageDto { Message = "User does not exist." });
+            }
+
+            var userToReturn = new UserDto
+            {
+                Email = user.Email,
+                Name = user.Name,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth
+            };
+
+            return Result.Success<UserDto, ErrorMessageDto>(userToReturn);
         }
     }
 }

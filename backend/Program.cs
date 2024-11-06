@@ -42,6 +42,8 @@ namespace backend
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
             });
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
