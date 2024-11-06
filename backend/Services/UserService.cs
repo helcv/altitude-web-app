@@ -27,6 +27,16 @@ namespace backend.Services
         {
             var messages = new List<string>();
 
+            var userExist = await _userRepository.GetAllUsers()
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(u => u.Email == registerDto.Email);
+
+            if (userExist != null)
+            {
+                messages.Add($"Email '{registerDto.Email}' is already taken.");
+                return new CreateDto { Id = null, Messages = messages };
+            }
+
             var userToRegister = new User
             {
                 UserName = registerDto.Email,
@@ -54,6 +64,17 @@ namespace backend.Services
             return new CreateDto { Id = userToRegister.Id, Messages = messages };
         }
 
+        public async Task<bool> DeleteUserAsync(string id)
+        {
+            if (!await _userRepository.DeleteUserAsync(id))
+            {
+                return false;
+            }
+
+            await _userRepository.SaveAllAsync();
+            return true;
+        }
+
         public async Task<List<UserDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsers().ToListAsync();
@@ -71,6 +92,7 @@ namespace backend.Services
 
             var userToReturn = new UserDto
             {
+                Id = user.Id,
                 Email = user.Email,
                 Name = user.Name,
                 LastName = user.LastName,

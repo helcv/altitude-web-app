@@ -8,5 +8,6 @@ namespace backend.Entities
         public string LastName { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public string ProfilePhotoUrl { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

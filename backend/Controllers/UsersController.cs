@@ -34,5 +34,15 @@ namespace backend.Controllers
 
             return Ok(result);
         }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserAsync(string id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+            if (!result) return NotFound("User does not exist.");
+
+            return Ok("User successfully deleted");
+        }
     }
 }

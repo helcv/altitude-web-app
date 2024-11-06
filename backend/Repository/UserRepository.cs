@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Entities;
 using backend.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repository
 {
@@ -29,6 +30,18 @@ namespace backend.Repository
         public IQueryable<User> GetAllUsers()
         {
             return _context.Users;
+        }
+
+        public async Task<bool> DeleteUserAsync(string id)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.IsDeleted = true;
+            return true;
         }
     }
 }
