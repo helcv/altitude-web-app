@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
+using backend.Interfaces;
+using backend.Repository;
 
 namespace backend
 {
@@ -20,6 +22,8 @@ namespace backend
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
             });
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             var app = builder.Build();
 
