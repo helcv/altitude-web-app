@@ -8,5 +8,6 @@ namespace backend.Interfaces
         Task<CreateDto> CreateUserAsync(RegisterDto registerDto);
         Task<Result<UserDto, MessageDto>> GetProfileAsync(string id);
         Task<Result<MessageDto, IEnumerable<string>>> UpdateUserDetailsAsync(string id, UpdateUserDto updateUserDto);
+        Task<Result<MessageDto, IEnumerable<string>>> UpdateUserPasswordAsync(string id, UpdatePasswordDto updatePasswordDto);
     }
 }

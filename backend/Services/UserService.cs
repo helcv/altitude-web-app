@@ -83,5 +83,26 @@ namespace backend.Services
             return Result.Success<MessageDto, IEnumerable<string>>(new MessageDto { Message = "User successfully updated." });
 
         }
+
+        public async Task<Result<MessageDto, IEnumerable<string>>> UpdateUserPasswordAsync(string id, UpdatePasswordDto updatePasswordDto)
+        {
+            var errorMessages = new List<string>();
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                errorMessages.Add("User does not exist.");
+                return Result.Failure<MessageDto, IEnumerable<string>>(errorMessages);
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, updatePasswordDto.OldPassword, updatePasswordDto.NewPassword);
+            if (!result.Succeeded)
+            {
+                errorMessages.AddRange(result.Errors.Select(error => error.Description));
+                return Result.Failure<MessageDto, IEnumerable<string>>(errorMessages);
+            }
+
+            return Result.Success<MessageDto, IEnumerable<string>>(new MessageDto { Message = "Password successfully updated." });
+        }
     }
 }

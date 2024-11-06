@@ -43,5 +43,17 @@ namespace backend.Controllers
 
             return Ok(result.Value);
         }
+
+        [Authorize]
+        [HttpPut("password")]
+        public async Task<IActionResult> UpdateUserPasswordAsync(UpdatePasswordDto updatePasswordDto)
+        {
+            var currentUserId = (_contextAccessor.HttpContext.User).GetUserId();
+
+            var result = await _userService.UpdateUserPasswordAsync(currentUserId, updatePasswordDto);
+            if (result.IsFailure) return BadRequest(result.Error);
+
+            return Ok(result.Value);
+        }
     }
 }
