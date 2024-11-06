@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using backend.Data;
 using backend.Interfaces;
 using backend.Repository;
+using backend.Services;
+using backend.Entities;
 
 namespace backend
 {
@@ -24,6 +27,14 @@ namespace backend
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddIdentityCore<User>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequiredLength = 7;
+            })
+                .AddEntityFrameworkStores<DataContext>();
 
             var app = builder.Build();
 
