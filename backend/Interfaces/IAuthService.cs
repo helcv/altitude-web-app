@@ -1,9 +1,10 @@
 ﻿using backend.DTOs;
+using CSharpFunctionalExtensions;
 
 namespace backend.Interfaces
 {
     public interface IAuthService
     {
-        Task<TokenDto> LoginAsync(LoginDto loginDto);
+        Task<Result<TokenDto, ErrorMessageDto>> LoginAsync(LoginDto loginDto);
     }
 }

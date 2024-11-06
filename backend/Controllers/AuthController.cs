@@ -19,9 +19,9 @@ namespace backend.Controllers
         public async Task<IActionResult> LoginAsync(LoginDto loginDto)
         {
             var result = await _authService.LoginAsync(loginDto);
-            if (result.Token == null) return Unauthorized(result);
+            if (result.IsFailure) return Unauthorized(result.Error);
 
-            return Ok(result);
+            return Ok(result.Value);
         }
     }
 }

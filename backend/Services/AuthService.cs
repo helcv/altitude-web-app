@@ -2,6 +2,7 @@
 using backend.DTOs;
 using backend.Entities;
 using backend.Interfaces;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace backend.Services
@@ -16,26 +17,27 @@ namespace backend.Services
             _userManager = userManager;
             _tokenHandler = tokenHandler;
         }
-        public async Task<TokenDto> LoginAsync(LoginDto loginDto)
+        public async Task<Result<TokenDto, ErrorMessageDto>> LoginAsync(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null)
             {
-                return new TokenDto { Id = null, Token = null, Message = "Invalid email address." };
+                return Result.Failure<TokenDto, ErrorMessageDto>(new ErrorMessageDto { Message = "Invalid email."});
             }
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!result)
             {
-                return new TokenDto { Id = null, Token = null, Message = "Invalid password." };
+                return Result.Failure<TokenDto, ErrorMessageDto>(new ErrorMessageDto { Message = "Invalid password." });
             }
 
-            return new TokenDto
+            var tokenDto = new TokenDto
             {
                 Id = user.Id,
                 Token = _tokenHandler.CreateToken(user),
-                Message = "User successfully logged in."
             };
+
+            return Result.Success<TokenDto, ErrorMessageDto>(tokenDto);
         }
     }
 }
