@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using backend.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace backend
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,8 @@ namespace backend
                 opt.User.RequireUniqueEmail = true;
                 opt.Password.RequiredLength = 7;
             })
+                .AddRoles<Role>()
+                .AddRoleManager<RoleManager<Role>>()
                 .AddEntityFrameworkStores<DataContext>();
 
             var app = builder.Build();
@@ -73,7 +76,26 @@ namespace backend
 
             app.MapControllers();
 
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+
+            try
+            {
+                var context = services.GetRequiredService<DataContext>();
+                var userManager = services.GetService<UserManager<User>>();
+                var roleManager = services.GetService<RoleManager<Role>>();
+                await context.Database.MigrateAsync();
+                await Seed.SeedAdminAndRoles(userManager, roleManager, builder.Configuration);
+            }
+
+            catch (Exception ex)
+            {
+                var logger = services.GetService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred during migration");
+            }
+
             app.Run();
+
         }
     }
 }

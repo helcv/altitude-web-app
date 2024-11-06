@@ -1,4 +1,5 @@
-﻿using backend.DTOs;
+﻿using backend.Constants;
+using backend.DTOs;
 using backend.Entities;
 using backend.Interfaces;
 using CSharpFunctionalExtensions;
@@ -35,6 +36,13 @@ namespace backend.Services
             {
                messages.AddRange(result.Errors.Select(error => error.Description));
                return new CreateDto { Id = null, Messages = messages };
+            }
+
+            var addToRole = await _userManager.AddToRoleAsync(userToRegister, Roles.User);
+            if (!addToRole.Succeeded)
+            {
+                messages.Add("Role does not exist.");
+                return new CreateDto { Id = null, Messages = messages };
             }
 
             messages.Add("User successfully created!");
