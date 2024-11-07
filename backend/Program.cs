@@ -38,6 +38,11 @@ namespace backend
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     };
+                })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = builder.Configuration["GoogleAuth:ClientId"];
+                    googleOptions.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"];
                 });
 
             builder.Services.AddDbContext<DataContext>(options =>

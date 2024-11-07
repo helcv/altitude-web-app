@@ -23,5 +23,14 @@ namespace backend.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpPost("signin-google")]
+        public async Task<IActionResult> SignInGoogleAsync(GoogleTokenDto googleTokenDto)
+        {
+            var result = await _authService.GoogleSignIn(googleTokenDto);
+            if (result.Token == null) return Unauthorized(result);
+
+            return Ok(result);
+        }
     }
 }
