@@ -2,6 +2,7 @@
 using backend.Constants;
 using backend.DTOs;
 using backend.Entities;
+using backend.Helpers;
 using backend.Interfaces;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
@@ -75,9 +76,14 @@ namespace backend.Services
             return true;
         }
 
-        public async Task<List<UserDto>> GetAllUsersAsync(string searchTerm)
+        public async Task<List<UserDto>> GetAllUsersAsync(string searchTerm, FilterParams filterParams = null)
         {
             var users = _userRepository.GetAllUsers();
+
+            if (filterParams != null && filterParams.StartDate != DateOnly.MinValue && filterParams.EndDate != DateOnly.MinValue)
+            {
+                users = users.Where(u => u.DateOfBirth >= filterParams.StartDate && u.DateOfBirth <= filterParams.EndDate);
+            }
 
             if (DateOnly.TryParse(searchTerm, out DateOnly dateOfBirth))
             {

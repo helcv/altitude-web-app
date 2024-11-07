@@ -1,5 +1,6 @@
 ﻿using backend.Constants;
 using backend.DTOs;
+using backend.Helpers;
 using backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,9 +29,9 @@ namespace backend.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet]
-        public async Task<IActionResult> GetAllUsersAsync([FromQuery] string search)
+        public async Task<IActionResult> GetAllUsersAsync([FromQuery] string search, [FromQuery] FilterParams filterParams)
         {
-            var result = await _userService.GetAllUsersAsync(search);
+            var result = await _userService.GetAllUsersAsync(search, filterParams);
 
             return Ok(result);
         }
