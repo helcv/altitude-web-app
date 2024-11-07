@@ -28,9 +28,9 @@ namespace backend.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet]
-        public async Task<IActionResult> GetAllUsersAsync()
+        public async Task<IActionResult> GetAllUsersAsync([FromQuery] string search)
         {
-            var result = await _userService.GetAllUsersAsync();
+            var result = await _userService.GetAllUsersAsync(search);
 
             return Ok(result);
         }

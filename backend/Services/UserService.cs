@@ -75,11 +75,21 @@ namespace backend.Services
             return true;
         }
 
-        public async Task<List<UserDto>> GetAllUsersAsync()
+        public async Task<List<UserDto>> GetAllUsersAsync(string searchTerm)
         {
-            var users = await _userRepository.GetAllUsers().ToListAsync();
+            var users = _userRepository.GetAllUsers();
 
-            return _mapper.Map<List<UserDto>>(users);
+            if (DateOnly.TryParse(searchTerm, out DateOnly dateOfBirth))
+            {
+                users = users.Where(u => u.DateOfBirth == dateOfBirth);
+            }
+            else if (!string.IsNullOrEmpty(searchTerm))
+            {
+                users = users.Where(u => u.Email.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            var usersToReturn = await users.ToListAsync();
+            return _mapper.Map<List<UserDto>>(usersToReturn);
         }
 
         public async Task<Result<UserDto, MessageDto>> GetProfileAsync(string id)
