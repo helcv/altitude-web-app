@@ -11,6 +11,7 @@ using backend.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using backend.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace backend
 {
@@ -64,6 +65,7 @@ namespace backend
             {
                 opt.User.RequireUniqueEmail = true;
                 opt.Password.RequiredLength = 7;
+                opt.Password.RequireNonAlphanumeric = false;
             })
                 .AddRoles<Role>()
                 .AddRoleManager<RoleManager<Role>>()
