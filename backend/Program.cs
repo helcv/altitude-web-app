@@ -71,6 +71,16 @@ namespace backend
                 .AddRoleManager<RoleManager<Role>>()
                 .AddEntityFrameworkStores<DataContext>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -84,6 +94,7 @@ namespace backend
 
             app.UseAuthorization();
 
+            app.UseCors("AllowSpecificOrigin");
 
             app.MapControllers();
 
