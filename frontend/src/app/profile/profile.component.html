@@ -1,0 +1,15 @@
+<div class="container my-5 d-flex justify-content-center">
+    <div *ngIf="user" class="card shadow-sm border-0 rounded-4 w-100" style="max-width: 400px;">
+        <div *ngIf="user.profilePhotoUrl" class="text-center mt-4">
+            <img [src]="user.profilePhotoUrl ? user.profilePhotoUrl : 'assets/user.jpg'" alt="Profile Photo" class="rounded-circle border border-4 border-white">
+        </div>
+        <div class="card-body text-center py-4">
+            <h2 class="card-title mb-3 mt-5 fw-bold text-dark">Welcome, {{ user.name }} {{ user.lastName }}!</h2>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Date of Birth:</strong> {{ user.dateOfBirth }}</p>
+        </div>
+        <div class="card-footer text-center">
+            <button class="btn btn-danger w-100 py-2 fs-5" (click)="logout()">Log out</button>
+        </div>
+    </div>
+</div>
