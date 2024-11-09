@@ -22,12 +22,14 @@ export class ProfileComponent implements OnInit{
   user: UserDto | null = null;
 
   constructor() {
-    this.userService.currentUser$.pipe(take(1)).subscribe({
-      next: user => this.user = user
-    })
+    
   }
 
   ngOnInit(): void {
+    this.userService.currentUser$.pipe(take(1)).subscribe({
+      next: user => this.user = user
+    })
+    
     this.loadUserProfile();
   }
 
@@ -38,8 +40,8 @@ export class ProfileComponent implements OnInit{
           this.user = user;
         },
         error: (error) => {
-          const apiMessage = error.error?.message || ['Registration failed'];
-        this.toastr.error(apiMessage, 'Error')
+          const apiMessage = error.error?.message || ['Failed to load user profile'];
+          this.toastr.error(apiMessage, 'Error')
         }
     })
   }
@@ -47,5 +49,9 @@ export class ProfileComponent implements OnInit{
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  edit() {
+    this.router.navigate(['/edit']);
   }
 }

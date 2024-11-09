@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit{
         this.router.navigate(['/profile']);
       },
       error: (error) => {
-        const apiMessage = error.error?.message || ['Registration failed'];
+        const apiMessage = error.error?.message || ['Login failed'];
         this.toastr.error(apiMessage, 'Error')
       }
     })

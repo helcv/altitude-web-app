@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateDto } from '../_models/createDto';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { UserDto } from '../_models/userDto';
 
 @Injectable({
@@ -17,6 +17,29 @@ export class UserService {
   register(model: any) {
     return this.http.post<CreateDto>(this.baseUrl + 'users', model)
   }
+
+  editProfileDetails(model: any) {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Token not found");
+
+    const formData = new FormData();
+    for (const key in model) {
+        if (model.hasOwnProperty(key)) {
+            formData.append(key, model[key]);
+        }
+    }
+
+    const headers = this.getAuthHeaders(token);
+    return this.http.put<string>(this.baseUrl + 'profile/details', formData, {headers})
+   }
+
+  changePassword(model: any) {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Token not found");
+
+    const headers = this.getAuthHeaders(token);
+    return this.http.put<string>(this.baseUrl + 'profile/password', model, {headers})
+   }
 
   getProfile(): Observable<UserDto> {
     const token = localStorage.getItem('token');
