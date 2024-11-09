@@ -12,6 +12,7 @@ namespace backend.Services
 {
     public class UserService : IUserService
     {
+        private const int minAge = 15;
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
         private readonly IFileService _fileService;
@@ -35,6 +36,13 @@ namespace backend.Services
             if (userExist != null)
             {
                 messages.Add($"Email '{registerDto.Email}' is already taken.");
+                return new CreateDto { Id = null, Messages = messages };
+            }
+
+            var age = CalculateAge(registerDto.DateOfBirth.Value);
+            if (age < minAge)
+            {
+                messages.Add($"You must be at least {minAge} years old.");
                 return new CreateDto { Id = null, Messages = messages };
             }
 
@@ -132,6 +140,13 @@ namespace backend.Services
                 return Result.Failure<MessageDto, IEnumerable<string>>(errorMessages);
             }
 
+            var age = CalculateAge(updateUserDto.DateOfBirth.Value);
+            if (age < minAge)
+            {
+                errorMessages.Add($"You must be at least {minAge} years old.");
+                return Result.Failure<MessageDto, IEnumerable<string>>(errorMessages);
+            }
+
             user.Name = updateUserDto.Name;
             user.LastName = updateUserDto.LastName;
             user.DateOfBirth = updateUserDto.DateOfBirth ?? DateOnly.MinValue;
@@ -179,6 +194,19 @@ namespace backend.Services
             }
 
             return Result.Success<MessageDto, IEnumerable<string>>(new MessageDto { Message = "Password successfully updated." });
+        }
+
+        private int CalculateAge(DateOnly dateOfBirth)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            int age = today.Year - dateOfBirth.Year;
+
+            if (today < dateOfBirth.AddYears(age))
+            {
+                age--;
+            }
+
+            return age;
         }
     }
 }

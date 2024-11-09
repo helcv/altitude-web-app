@@ -3,13 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { CreateDto } from '../_models/createDto';
 import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { UserDto } from '../_models/userDto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private http = inject(HttpClient);
-  baseUrl = 'https://localhost:7296/api/';
+  baseUrl = environment.apiUrl;
   private currUserSource = new BehaviorSubject<UserDto | null>(null);
   currentUser$ = this.currUserSource.asObservable();
 

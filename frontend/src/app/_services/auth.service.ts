@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, model } from '@angular/core';
 import { map } from 'rxjs';
 import { TokenDto } from '../_models/tokenDto';
 import { UserService } from './user.service';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../environments/environment';
+import { GoogleSignInDto } from '../_models/googleSignInDto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private http = inject(HttpClient);
   private userService = inject(UserService)
-  baseUrl = 'https://localhost:7296/api/';
+  baseUrl = environment.apiUrl;
 
   constructor() { }
 
@@ -24,6 +26,17 @@ export class AuthService {
         }
       })
     );
+  }
+
+  googleSignIn(model: any) {
+    return this.http.post<GoogleSignInDto>(this.baseUrl + 'auth/signin-google', model).pipe(
+      map((response: GoogleSignInDto) => {
+        const googleSignInDto = response;
+        if (googleSignInDto.token){
+          this.setToken(googleSignInDto.token)
+        }
+      })
+    )
   }
 
   setToken (token : string){

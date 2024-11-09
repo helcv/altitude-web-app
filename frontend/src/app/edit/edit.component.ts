@@ -25,8 +25,11 @@ export class EditComponent implements OnInit {
   private authService = inject(AuthService)
   private toastr = inject(ToastrService);
   user: UserDto | null = null;
+  maxDate: string | null = null;
 
   constructor() {
+    this.setDate()
+
     this.editDetailsForm = this.fb.group({
       name: ['',],
       lastName: ['',],
@@ -124,5 +127,12 @@ export class EditComponent implements OnInit {
             event.target.value = '';
         }
     }
+  }
+
+  private setDate() {
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setFullYear(today.getFullYear() - 15);
+    this.maxDate = maxDate.toISOString().split('T')[0];
   }
 }

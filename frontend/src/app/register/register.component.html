@@ -27,11 +27,13 @@
                 </div>
                 <div class="col-md-10 mx-auto mb-3 form-floating">
                     <input type="date"
+                        name="dateOfBirth"
                         [class.is-invalid]="registerForm.get('dateOfBirth')?.errors &&
                         registerForm.get('dateOfBirth')?.touched"
                         class="form-control"
                         formControlName="dateOfBirth"
                         placeholder="Date of birth"
+                        [max]="maxDate"
                     >
                     <label>Date of birth</label>
                     <div class="invalid-feedback">Please enter a Date of birth</div>
@@ -66,6 +68,9 @@
                 <div class="form-group text-center">
                     <button class="btn btn-success me-2" type="submit" [disabled]="registerForm.invalid">Register</button>
                     <button class="btn btn-danger me-2" (click)="cancelForm()">Cancel</button>
+                </div>
+                <div class="mt-4 d-flex justify-content-center">
+                    <div id="google-button"></div>
                 </div>
             </form>
         </div>
