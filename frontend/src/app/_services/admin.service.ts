@@ -33,7 +33,7 @@ export class AdminService {
     return this.http.get<UserDto[]>(`${this.baseUrl}users${query}`, { headers });
   }
 
-  deleteUser(id: string): Observable<any> {
+  deleteUser(id: string): Observable<string> {
     const token = localStorage.getItem('token');
     if (!token) throw new Error("Token not found");
 

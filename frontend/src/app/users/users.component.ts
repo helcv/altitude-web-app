@@ -4,6 +4,7 @@ import { AdminService } from '../_services/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -12,12 +13,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent implements OnInit{
+export class UsersComponent implements OnInit {
   users: UserDto[] = []
   private adminService = inject(AdminService)
   private toastr = inject(ToastrService)
+  private router = inject(Router)
   searchTerm: string = '';
-  startDate: string = ''; 
+  startDate: string = '';
   endDate: string = '';
 
   ngOnInit(): void {
@@ -42,15 +44,18 @@ export class UsersComponent implements OnInit{
 
   deleteUser(id: string) {
     this.adminService.deleteUser(id).subscribe({
-        next: (response) => {
-            this.toastr.success('User successfully deleted', 'Success');
-            this.loadUsers();
-        },
-        error: (error) => {
-            const apiMessage = error.error?.message || 'Failed to delete user profile';
-            this.toastr.error(apiMessage, 'Error');
-        }
+      next: (response) => {
+        this.toastr.success('User successfully deleted', 'Success');
+        this.loadUsers();
+      },
+      error: (error) => {
+        const apiMessage = error.error?.message || 'Failed to delete user profile';
+        this.toastr.error(apiMessage, 'Error');
+      }
     });
-}
-      
+  }
+
+  redirectToProfile() {
+    this.router.navigate(['/profile']);
+  }
 }
