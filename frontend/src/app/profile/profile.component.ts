@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit{
   router = inject(Router)
   toastr = inject(ToastrService)
   user: UserDto | null = null;
+  isAdmin: boolean | null = null;
 
   constructor() {
     
@@ -29,6 +30,8 @@ export class ProfileComponent implements OnInit{
     this.userService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     })
+
+    this.isAdmin = this.authService.getRoleFromToken() === 'Admin' ? true : false;
     
     this.loadUserProfile();
   }
@@ -53,5 +56,9 @@ export class ProfileComponent implements OnInit{
 
   edit() {
     this.router.navigate(['/edit']);
+  }
+
+  users() {
+    this.router.navigate(['/users']);
   }
 }

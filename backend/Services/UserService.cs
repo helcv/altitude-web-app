@@ -67,10 +67,12 @@ namespace backend.Services
 
         public async Task<bool> DeleteUserAsync(string id)
         {
-            if (!await _userRepository.DeleteUserAsync(id))
-            {
+            var user = await _userManager.FindByIdAsync(id);
+            if (await _userManager.IsInRoleAsync(user, Roles.Admin))
                 return false;
-            }
+
+            if (!await _userRepository.DeleteUserAsync(id))
+                return false;
 
             await _userRepository.SaveAllAsync();
             return true;

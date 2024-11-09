@@ -9,7 +9,8 @@
             <p><strong>Date of Birth:</strong> {{ user.dateOfBirth }}</p>
         </div>
         <div class="card-footer text-center">
-            <button class="btn btn-primary w-100 py-2 fs-5" (click)="edit()">Edit profile</button>
+            <button *ngIf="isAdmin" class="btn btn-primary w-100 py-2 fs-5 mt-2" (click)="users()">See users info</button>
+            <button class="btn btn-primary w-100 py-2 fs-5 mt-2" (click)="edit()">Edit profile</button>
             <button class="btn btn-danger w-100 py-2 fs-5 mt-2" (click)="logout()">Log out</button>
         </div>
     </div>

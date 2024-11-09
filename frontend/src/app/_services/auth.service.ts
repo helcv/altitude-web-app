@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
-import { UserDto } from '../_models/userDto';
+import { map } from 'rxjs';
 import { TokenDto } from '../_models/tokenDto';
 import { UserService } from './user.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,15 @@ export class AuthService {
 
   setToken (token : string){
     localStorage.setItem('token', token);
+  }
+
+  getRoleFromToken(): string | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.role;
+    }
+    return null;
   }
 
   logout(){
