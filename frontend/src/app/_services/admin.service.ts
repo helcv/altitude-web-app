@@ -15,11 +15,6 @@ export class AdminService {
   constructor() { }
 
   getUsers(queryParams: UserQueryParams): Observable<UserDto[]> {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error("Token not found");
-  
-    const headers = this.getAuthHeaders(token);
-  
     let queryParamsString = '';
     if (queryParams.searchTerm) {
       queryParamsString += `search=${queryParams.searchTerm}`;
@@ -35,20 +30,10 @@ export class AdminService {
     }
   
     const query = queryParamsString ? `?${queryParamsString}` : '';
-    return this.http.get<UserDto[]>(`${this.baseUrl}users${query}`, { headers });
+    return this.http.get<UserDto[]>(`${this.baseUrl}users${query}`);
   }
 
   deleteUser(id: string): Observable<string> {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error("Token not found");
-
-    const headers = this.getAuthHeaders(token);
-    return this.http.delete<string>(`${this.baseUrl}users/${id}`, { headers });
-  }
-
-  private getAuthHeaders(token: string): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+    return this.http.delete<string>(`${this.baseUrl}users/${id}`);
   }
 }

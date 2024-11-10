@@ -20,9 +20,6 @@ export class UserService {
   }
 
   editProfileDetails(model: any) {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error("Token not found");
-
     const formData = new FormData();
     for (const key in model) {
         if (model.hasOwnProperty(key)) {
@@ -30,32 +27,19 @@ export class UserService {
         }
     }
 
-    const headers = this.getAuthHeaders(token);
-    return this.http.put<string>(this.baseUrl + 'profile/details', formData, {headers})
+    return this.http.put<string>(this.baseUrl + 'profile/details', formData)
    }
 
   changePassword(model: any) {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error("Token not found");
-
-    const headers = this.getAuthHeaders(token);
-    return this.http.put<string>(this.baseUrl + 'profile/password', model, {headers})
+    return this.http.put<string>(this.baseUrl + 'profile/password', model)
    }
 
    enableTwoFactor(model: any) {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error("Token not found");
-
-    const headers = this.getAuthHeaders(token);
-    return this.http.put(this.baseUrl + 'auth/twofactor', model, {headers})
+    return this.http.put(this.baseUrl + 'auth/twofactor', model)
    }
 
   getProfile(): Observable<UserDto> {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error("Token not found");
-
-    const headers = this.getAuthHeaders(token);
-    return this.http.get<UserDto>(this.baseUrl + 'profile', {headers}).pipe(
+    return this.http.get<UserDto>(this.baseUrl + 'profile').pipe(
       tap((user : UserDto) => {
         if (user) {
           this.setUser(user);
@@ -67,12 +51,6 @@ export class UserService {
 
   private setUser(user: UserDto) {
     localStorage.setItem('user', JSON.stringify(user));
-  }
-
-  private getAuthHeaders(token: string): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
   }
 
   clearUser() {
