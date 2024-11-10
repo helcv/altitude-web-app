@@ -122,7 +122,7 @@ export class EditComponent implements OnInit {
         this.updateForm(this.user);
       },
       error: (error) => {
-        const apiMessage = error.error?.message || ['Registration failed'];
+        const apiMessage = error.error?.message || ['Loading user profile failed'];
       this.toastr.error(apiMessage, 'Error')
       }
     })
