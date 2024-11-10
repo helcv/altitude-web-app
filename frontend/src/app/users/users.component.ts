@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserQueryParams } from '../_models/queryParams';
 
 @Component({
   selector: 'app-users',
@@ -18,17 +19,14 @@ export class UsersComponent implements OnInit {
   private adminService = inject(AdminService)
   private toastr = inject(ToastrService)
   private router = inject(Router)
-  searchTerm: string = '';
-  startDate: string = '';
-  endDate: string = '';
-
+  queryParams: UserQueryParams = new UserQueryParams();
   ngOnInit(): void {
     this.loadUsers()
   }
 
 
   loadUsers() {
-    this.adminService.getUsers(this.searchTerm, this.startDate, this.endDate).subscribe({
+    this.adminService.getUsers(this.queryParams).subscribe({
       next: (users: UserDto[]) => {
         this.users = users
       },

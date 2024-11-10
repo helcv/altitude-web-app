@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserDto } from '../_models/userDto';
 import { environment } from '../../environments/environment';
+import { UserQueryParams } from '../_models/queryParams';
 
 @Injectable({
   providedIn: 'root'
@@ -13,24 +14,27 @@ export class AdminService {
 
   constructor() { }
 
-  getUsers(searchTerm: string = '', startDate: string = '', endDate: string = ''): Observable<UserDto[]> {
+  getUsers(queryParams: UserQueryParams): Observable<UserDto[]> {
     const token = localStorage.getItem('token');
     if (!token) throw new Error("Token not found");
   
     const headers = this.getAuthHeaders(token);
   
-    let queryParams = '';
-    if (searchTerm) {
-      queryParams += `search=${searchTerm}`;
+    let queryParamsString = '';
+    if (queryParams.searchTerm) {
+      queryParamsString += `search=${queryParams.searchTerm}`;
     }
-    if (startDate) {
-      queryParams += queryParams ? `&startDate=${startDate}` : `startDate=${startDate}`;
+    if (queryParams.startDate) {
+      queryParamsString += queryParamsString ? `&startDate=${queryParams.startDate}` : `startDate=${queryParams.startDate}`;
     }
-    if (endDate) {
-      queryParams += queryParams ? `&endDate=${endDate}` : `endDate=${endDate}`;
+    if (queryParams.endDate) {
+      queryParamsString += queryParamsString ? `&endDate=${queryParams.endDate}` : `endDate=${queryParams.endDate}`;
+    }
+    if (queryParams.isVerified !== null) {
+      queryParamsString += queryParamsString ? `&isverified=${queryParams.isVerified}` : `&isverified=${queryParams.isVerified}`;
     }
   
-    const query = queryParams ? `?${queryParams}` : '';
+    const query = queryParamsString ? `?${queryParamsString}` : '';
     return this.http.get<UserDto[]>(`${this.baseUrl}users${query}`, { headers });
   }
 

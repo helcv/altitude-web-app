@@ -5,18 +5,27 @@
   </div>
 
   <div class="mb-4">
-    <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" class="form-control"
+    <input type="text" [(ngModel)]="queryParams.searchTerm" (input)="onSearch()" class="form-control"
       placeholder="Search users by email or date of birth" />
   </div>
 
   <div class="mb-4">
     <label for="startDate">Start Date</label>
-    <input type="date" [(ngModel)]="startDate" (change)="onSearch()" class="form-control" id="startDate" />
+    <input type="date" [(ngModel)]="queryParams.startDate" (change)="onSearch()" class="form-control" id="startDate" />
   </div>
 
   <div class="mb-4">
     <label for="endDate">End Date</label>
-    <input type="date" [(ngModel)]="endDate" (change)="onSearch()" class="form-control" id="endDate" />
+    <input type="date" [(ngModel)]="queryParams.endDate" (change)="onSearch()" class="form-control" id="endDate" />
+  </div>
+
+  <div class="mb-4">
+    <label for="isVerified">Verification Status</label>
+    <select [(ngModel)]="queryParams.isVerified" (change)="onSearch()" class="form-control" id="isVerified">
+      <option [ngValue]="null">All</option>
+      <option [ngValue]="true">Verified</option>
+      <option [ngValue]="false">Not Verified</option>
+    </select>
   </div>
 
   <table class="table table-bordered table-hover rounded-4 ">

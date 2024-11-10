@@ -107,7 +107,13 @@ namespace backend.Services
 
             if (filterParams != null && filterParams.StartDate != DateOnly.MinValue && filterParams.EndDate != DateOnly.MinValue)
             {
-                users = users.Where(u => u.DateOfBirth >= filterParams.StartDate && u.DateOfBirth <= filterParams.EndDate);
+                users = users.Where(u => u.DateOfBirth >= filterParams.StartDate &&
+                    u.DateOfBirth <= filterParams.EndDate);
+            }
+
+            if (filterParams.IsVerified != null)
+            {
+                users = users.Where(u => u.EmailConfirmed == filterParams.IsVerified);
             }
 
             if (DateOnly.TryParse(searchTerm, out DateOnly dateOfBirth))
@@ -120,6 +126,7 @@ namespace backend.Services
             }
 
             var usersToReturn = await users.ToListAsync();
+
             return _mapper.Map<List<UserDto>>(usersToReturn);
         }
 

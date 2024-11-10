@@ -80,6 +80,8 @@ namespace backend.Services
             }
 
             messages.Add("User successfully created!");
+            userToRegister.EmailConfirmed = true;
+            await _userManager.UpdateAsync(userToRegister);
             return new GoogleSignInDto { Id = userToRegister.Id, Messages = messages, Token = await _tokenHandler.CreateToken(userToRegister)};
         }
 
