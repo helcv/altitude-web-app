@@ -29,7 +29,7 @@
                 
                 <div class="form-group text-center">
                     <button class="btn btn-success me-2" type="submit" [disabled]="loginForm.invalid">Login</button>
-                    <button class="btn btn-danger me-2" (click)="cancelForm()">Cancel</button>
+                    <button class="btn btn-danger me-2" [routerLink]="['/']">Cancel</button>
                 </div>
             </form>
         </div>

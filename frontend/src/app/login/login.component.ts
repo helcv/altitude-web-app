@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { CustomValidators } from '../_validators/custom-validators';
@@ -11,7 +11,7 @@ import { TokenDto } from '../_models/tokenDto';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -50,9 +50,5 @@ export class LoginComponent implements OnInit{
         this.toastr.error(apiMessage, 'Error')
       }
     })
-  }
-
-  cancelForm() {
-    this.router.navigate(['/']);
   }
 }

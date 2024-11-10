@@ -15,11 +15,11 @@ import { NgIf } from '@angular/common';
   styleUrl: './twofactor.component.css'
 })
 export class TwofactorComponent implements OnInit {
-  fb = inject(FormBuilder)
-  authService = inject(AuthService)
-  toastr = inject(ToastrService)
-  router = inject(Router)
-  route = inject(ActivatedRoute)
+  private fb = inject(FormBuilder)
+  private authService = inject(AuthService)
+  private toastr = inject(ToastrService)
+  private router = inject(Router)
+  private route = inject(ActivatedRoute)
   twoFactorForm: FormGroup;
   email: string | null = null;
   provider = environment.provider;

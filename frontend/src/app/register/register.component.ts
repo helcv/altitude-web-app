@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CustomValidators } from '../_validators/custom-validators';
 import { UserService } from '../_services/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,7 +12,7 @@ import { AuthService } from '../_services/auth.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -93,10 +93,6 @@ export class RegisterComponent implements OnInit {
   handleGoogleSignIn(response: any) {
     const googleTokenDto: GoogleTokenDto = { token: response.credential };
     this.googleSignIn(googleTokenDto);
-  }
-
-  cancelForm() {
-    this.router.navigate(['/']);
   }
 
   private setDate() {

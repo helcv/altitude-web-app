@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CustomValidators } from '../_validators/custom-validators';
 import { NgIf } from '@angular/common';
 import { UserDto } from '../_models/userDto';
@@ -12,7 +12,7 @@ import { AuthService } from '../_services/auth.service';
 @Component({
   selector: 'app-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, RouterLink],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.css'
 })
@@ -55,7 +55,6 @@ export class EditComponent implements OnInit {
       }
     })
     this.loadUserProfile();
-    console.log(this.user?.isAuthWithGoogle)
   }
 
   editProfile() {
@@ -108,10 +107,6 @@ export class EditComponent implements OnInit {
         }
       });
     }
-  }
-
-  redirectToProfile() {
-    this.router.navigate(['/profile']);
   }
 
   loadUserProfile() {

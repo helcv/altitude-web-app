@@ -11,10 +11,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './email-confirmation.component.css'
 })
 export class EmailConfirmationComponent implements OnInit {
-  route = inject(ActivatedRoute)
-  authService = inject(AuthService)
-  toastr = inject(ToastrService)
-  router = inject(Router)
+  private route = inject(ActivatedRoute)
+  private authService = inject(AuthService)
+  private toastr = inject(ToastrService)
+  private router = inject(Router)
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get('token');
@@ -30,7 +30,6 @@ export class EmailConfirmationComponent implements OnInit {
         },
         (error) => {
           this.toastr.error('Email confirmation failed. Please try again.');
-          console.error(error);
         }
       );
     } else {

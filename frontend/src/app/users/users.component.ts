@@ -4,13 +4,13 @@ import { AdminService } from '../_services/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UserQueryParams } from '../_models/queryParams';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgFor, FormsModule],
+  imports: [NgFor, FormsModule, RouterLink],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
@@ -18,7 +18,6 @@ export class UsersComponent implements OnInit {
   users: UserDto[] = []
   private adminService = inject(AdminService)
   private toastr = inject(ToastrService)
-  private router = inject(Router)
   queryParams: UserQueryParams = new UserQueryParams();
 
   ngOnInit(): void {
@@ -51,9 +50,5 @@ export class UsersComponent implements OnInit {
         this.toastr.error(apiMessage, 'Error');
       }
     });
-  }
-
-  redirectToProfile() {
-    this.router.navigate(['/profile']);
   }
 }

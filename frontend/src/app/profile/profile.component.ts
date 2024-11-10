@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserDto } from '../_models/userDto';
 import { UserService } from '../_services/user.service';
 import { take } from 'rxjs';
@@ -10,15 +10,15 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, RouterLink],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit{
-  authService = inject(AuthService)
-  userService = inject(UserService)
-  router = inject(Router)
-  toastr = inject(ToastrService)
+  private authService = inject(AuthService)
+  private userService = inject(UserService)
+  private router = inject(Router)
+  private toastr = inject(ToastrService)
   user: UserDto | null = null;
   isAdmin: boolean | null = null;
 
@@ -52,13 +52,5 @@ export class ProfileComponent implements OnInit{
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
-  }
-
-  edit() {
-    this.router.navigate(['/edit']);
-  }
-
-  users() {
-    this.router.navigate(['/users']);
   }
 }
