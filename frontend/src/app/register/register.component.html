@@ -64,6 +64,18 @@
                     <div *ngIf="registerForm.get('password')?.hasError('uppercase')" class="invalid-feedback">Passwords must have at least one uppercase ('A'-'Z')</div>
                     <div *ngIf="registerForm.get('password')?.hasError('digit')" class="invalid-feedback">Passwords must have at least one digit ('0'-'9')</div>
                 </div>
+                <div class="col-md-10 mx-auto mb-3 form-floating">
+                    <input type="password"
+                        [class.is-invalid]="registerForm.get('repeatPassword')?.errors &&
+                        registerForm.get('repeatPassword')?.touched"
+                        class="form-control"
+                        formControlName="repeatPassword"
+                        placeholder="Repeat password"
+                    >
+                    <label>Repeat Password</label>
+                    <div *ngIf="registerForm.get('repeatPassword')?.hasError('required')" class="invalid-feedback">Please repeat Password</div>
+                    <div *ngIf="registerForm.get('repeatPassword')?.hasError('notMatching')" class="invalid-feedback">Passwords do not match</div>
+                </div>
                 
                 <div class="form-group text-center">
                     <button class="btn btn-success me-2" type="submit" [disabled]="registerForm.invalid">Register</button>

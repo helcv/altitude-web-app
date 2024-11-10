@@ -19,7 +19,7 @@ namespace backend.Services
             var from = new EmailAddress(_config["MailSettings:From"]);
             var subject = $"{emailMessageDto.Subject}";
             var to = new EmailAddress(emailMessageDto.Email);
-            var text = $"neki text";
+            var text = "";
             var htmlContent = $"<strong>{emailMessageDto.Callback}</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, text, htmlContent);
             var response = await client.SendEmailAsync(msg);

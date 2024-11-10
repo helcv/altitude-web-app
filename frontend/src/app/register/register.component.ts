@@ -31,11 +31,12 @@ export class RegisterComponent implements OnInit {
     this.setDate()
 
     this.registerForm = this.fb.group({
-      name: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/\S+/)]],
       dateOfBirth: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(7), CustomValidators.passwordStrength]]
+      password: ['', [Validators.required, Validators.minLength(7), CustomValidators.passwordStrength]],
+      repeatPassword: ['', [Validators.required, CustomValidators.matchValues('password')]]
     })
   }
 

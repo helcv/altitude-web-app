@@ -41,7 +41,8 @@ export class EditComponent implements OnInit {
 
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(7), CustomValidators.passwordStrength]]
+      newPassword: ['', [Validators.required, Validators.minLength(7), CustomValidators.passwordStrength]],
+      repeatPassword: ['', [Validators.required, CustomValidators.matchValues('newPassword')]]
     })
   }
 
