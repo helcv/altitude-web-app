@@ -11,6 +11,8 @@ import { TwofactorComponent } from './twofactor/twofactor.component';
 import { authGuard } from './_guards/auth.guard';
 import { adminGuard } from './_guards/admin.guard';
 import { nonauthGuard } from './_guards/nonauth.guard';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent, canActivate: [nonauthGuard]},
@@ -20,7 +22,10 @@ export const routes: Routes = [
     {path: 'edit', component: EditComponent, canActivate: [authGuard] },
     {path: 'users', component: UsersComponent, canActivate: [adminGuard] },
     {path: 'auth/emailconfirmation', component: EmailConfirmationComponent },
-    {path: 'auth/twofactor', component: TwofactorComponent, canActivate: [nonauthGuard]  }
+    {path: 'auth/twofactor', component: TwofactorComponent, canActivate: [nonauthGuard]  },
+    {path: 'not-found', component: NotFoundComponent },
+    {path: 'server-error', component: ServerErrorComponent },
+    { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
