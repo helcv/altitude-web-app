@@ -81,8 +81,13 @@ namespace backend.Services
 
             messages.Add("User successfully created!");
             userToRegister.EmailConfirmed = true;
+            userToRegister.IsAuthWithGoogle = true;
             await _userManager.UpdateAsync(userToRegister);
-            return new GoogleSignInDto { Id = userToRegister.Id, Messages = messages, Token = await _tokenHandler.CreateToken(userToRegister)};
+            return new GoogleSignInDto { Id = userToRegister.Id, 
+                    Messages = messages, 
+                    Token = await _tokenHandler.CreateToken(userToRegister),
+                    IsAuthWithGoogle = userToRegister.IsAuthWithGoogle
+            };
         }
 
         public async Task<Result<TokenDto, MessageDto>> LoginAsync(LoginDto loginDto)

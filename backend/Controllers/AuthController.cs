@@ -59,8 +59,8 @@ namespace backend.Controllers
             var currentUserId = (_contextAccessor.HttpContext.User).GetUserId();
 
             var user = await _userManager.FindByIdAsync(currentUserId);
-            if (await _userManager.IsInRoleAsync(user, Roles.Admin))
-                return BadRequest("Cannot set two factor authentication for admin!");
+            if (await _userManager.IsInRoleAsync(user, Roles.Admin) || user.IsAuthWithGoogle)
+                return BadRequest("Cannot set two factor authentication for this user!");
 
             await _authService.EnableTwoFactorAsync(user, setTwoFactorDto.IsEnabled.Value);
 

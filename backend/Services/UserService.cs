@@ -146,7 +146,8 @@ namespace backend.Services
                 LastName = user.LastName,
                 DateOfBirth = user.DateOfBirth,
                 ProfilePhotoUrl = user.ProfilePhotoUrl,
-                IsTwoFactorEnabled = user.TwoFactorEnabled
+                IsTwoFactorEnabled = user.TwoFactorEnabled,
+                IsAuthWithGoogle = user.IsAuthWithGoogle
             };
 
             return Result.Success<UserDto, MessageDto>(userToReturn);

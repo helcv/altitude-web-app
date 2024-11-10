@@ -37,7 +37,7 @@
                     >
                     <label>Profile photo</label>
                 </div>
-                <div *ngIf="!isAdmin" class="col-md-10 mx-auto mb-3 form-check form-switch">
+                <div *ngIf="!(user?.isAuthWithGoogle || isAdmin)" class="col-md-10 mx-auto mb-3 form-check form-switch">
                     <input 
                         type="checkbox" 
                         class="form-check-input" 

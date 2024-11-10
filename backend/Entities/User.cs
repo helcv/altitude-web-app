@@ -9,5 +9,6 @@ namespace backend.Entities
         public DateOnly DateOfBirth { get; set; }
         public string ProfilePhotoUrl { get; set; }
         public bool IsDeleted { get; set; } = false;
+        public bool IsAuthWithGoogle { get; set; } = false;
     }
 }

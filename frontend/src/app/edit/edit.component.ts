@@ -55,6 +55,7 @@ export class EditComponent implements OnInit {
       }
     })
     this.loadUserProfile();
+    console.log(this.user?.isAuthWithGoogle)
   }
 
   editProfile() {

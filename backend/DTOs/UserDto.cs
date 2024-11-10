@@ -9,5 +9,6 @@
         public  string ProfilePhotoUrl { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public bool IsTwoFactorEnabled { get; set; }
+        public bool IsAuthWithGoogle { get; set; }
     }
 }
