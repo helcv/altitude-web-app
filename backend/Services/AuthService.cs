@@ -62,7 +62,8 @@ namespace backend.Services
                 Name = payload.GivenName,
                 LastName = payload.FamilyName,
                 Email = payload.Email,
-                UserName = payload.Email
+                UserName = payload.Email,
+                ProfilePhotoUrl = payload.Picture
             };
 
             var result = await _userManager.CreateAsync(userToRegister);

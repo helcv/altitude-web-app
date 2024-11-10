@@ -8,7 +8,9 @@ namespace backend.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<UserDto, User>().ReverseMap();
+            CreateMap<User, UserDto>()
+                .ForMember(dest => dest.IsVerified, opt => opt.MapFrom(src => src.EmailConfirmed))
+                .ReverseMap();
         }
     }
 }

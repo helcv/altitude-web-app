@@ -6,5 +6,6 @@ export interface UserDto {
     profilePhotoUrl: string;
     dateOfBirth: Date;
     isTwoFactorEnabled: boolean,
-    isAuthWithGoogle: boolean
+    isAuthWithGoogle: boolean,
+    isVerified: boolean
 }

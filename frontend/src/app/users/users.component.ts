@@ -20,10 +20,10 @@ export class UsersComponent implements OnInit {
   private toastr = inject(ToastrService)
   private router = inject(Router)
   queryParams: UserQueryParams = new UserQueryParams();
+
   ngOnInit(): void {
     this.loadUsers()
   }
-
 
   loadUsers() {
     this.adminService.getUsers(this.queryParams).subscribe({
