@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using backend.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
+using backend.Middlewares;
 
 namespace backend
 {
@@ -86,6 +87,8 @@ namespace backend
             });
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
