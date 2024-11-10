@@ -72,7 +72,8 @@ namespace backend
                 .AddRoles<Role>()
                 .AddRoleManager<RoleManager<Role>>()
                 .AddEntityFrameworkStores<DataContext>()
-                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
+                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider)
+                .AddTokenProvider<EmailTokenProvider<User>>("Email"); ;
 
             builder.Services.AddCors(options =>
             {

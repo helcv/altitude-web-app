@@ -7,6 +7,7 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using backend.Constants;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Services
 {
@@ -15,14 +16,17 @@ namespace backend.Services
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
         private readonly IAuthTokenHandler _tokenHandler;
+        private readonly IEmailService _emailService;
         private readonly string _googleCredentials;
 
-        public AuthService(UserManager<User> userManager, IAuthTokenHandler tokenHandler, IUserRepository userRepository, IConfiguration config)
+        public AuthService(UserManager<User> userManager, IAuthTokenHandler tokenHandler, IUserRepository userRepository, 
+                IConfiguration config, IEmailService emailService)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _tokenHandler = tokenHandler;
             _googleCredentials = config["GoogleAuth:ClientId"];
+            _emailService = emailService;
         }
 
         public async Task<bool> EmailConfirmationAsync(ConfirmEmailDto confirmEmailDto)
@@ -111,13 +115,49 @@ namespace backend.Services
                 return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Invalid password." });
             }
 
+            if(await _userManager.GetTwoFactorEnabledAsync(user))
+            {
+                return await GenerateOTPFor2Fa(user);
+            }
+
             var tokenDto = new TokenDto
             {
                 Id = user.Id,
                 Token = await _tokenHandler.CreateToken(user),
+                Is2FaRequired = false
             };
 
             return Result.Success<TokenDto, MessageDto>(tokenDto);
+        }
+
+        public async Task EnableTwoFactorAsync(User user, bool isEnabled)
+        {
+            await _userManager.SetTwoFactorEnabledAsync(user, isEnabled);
+        }
+
+        public async Task<TokenDto> TwoFactorAsync(TwoFactorDto twoFactorDto)
+        {
+            var user = await _userManager.FindByEmailAsync(twoFactorDto.Email);
+            if (user == null) return new TokenDto { Token = null };
+
+            var validVerification = await _userManager.VerifyTwoFactorTokenAsync(user, twoFactorDto.Provider, twoFactorDto.Token);
+            if (!validVerification) return new TokenDto { Token = null };
+
+            return new TokenDto { Id = user.Id, Token = await _tokenHandler.CreateToken(user), Provider = twoFactorDto.Provider };
+        }
+
+        private async Task<TokenDto> GenerateOTPFor2Fa(User user)
+        {
+            var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
+            if(!providers.Contains("Email"))
+                return new TokenDto { Id = null, Token = null };
+
+            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+
+            var message = new EmailMessageDto { Email = user.Email, Subject = "Authentication token", Callback = token};
+            await _emailService.SendEmail(message);
+
+            return new TokenDto { Id = user.Id, Provider = "Email", Is2FaRequired = true};
         }
     }
 }
