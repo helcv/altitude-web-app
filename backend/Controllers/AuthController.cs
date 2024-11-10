@@ -1,4 +1,5 @@
-﻿using backend.DTOs;
+﻿using backend.Constants;
+using backend.DTOs;
 using backend.Entities;
 using backend.Extensions;
 using backend.Interfaces;
@@ -58,6 +59,9 @@ namespace backend.Controllers
             var currentUserId = (_contextAccessor.HttpContext.User).GetUserId();
 
             var user = await _userManager.FindByIdAsync(currentUserId);
+            if (await _userManager.IsInRoleAsync(user, Roles.Admin))
+                return BadRequest("Cannot set two factor authentication for admin!");
+
             await _authService.EnableTwoFactorAsync(user, setTwoFactorDto.IsEnabled.Value);
 
             return Ok();

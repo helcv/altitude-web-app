@@ -8,5 +8,6 @@
         public string Email { get; set; }
         public  string ProfilePhotoUrl { get; set; }
         public DateOnly DateOfBirth { get; set; }
+        public bool IsTwoFactorEnabled { get; set; }
     }
 }

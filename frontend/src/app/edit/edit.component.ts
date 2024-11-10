@@ -26,6 +26,7 @@ export class EditComponent implements OnInit {
   private toastr = inject(ToastrService);
   user: UserDto | null = null;
   maxDate: string | null = null;
+  isAdmin: boolean | null = null;
 
   constructor() {
     this.setDate()
@@ -34,7 +35,8 @@ export class EditComponent implements OnInit {
       name: ['',],
       lastName: ['',],
       dateOfBirth: ['',],
-      profilePhoto: [null]
+      profilePhoto: [null],
+      twoFactorEnabled: []
     })
 
     this.changePasswordForm = this.fb.group({
@@ -44,6 +46,8 @@ export class EditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.getRoleFromToken() === 'Admin' ? true : false;
+
     this.userService.currentUser$.pipe(take(1)).subscribe({
       next: (user) => {
         this.user = user;
@@ -66,6 +70,25 @@ export class EditComponent implements OnInit {
         }
       });
     }
+  }
+
+  toggleTwoFactor() {
+    const isEnabled = this.editDetailsForm.get('twoFactorEnabled')?.value;
+    const twoFactor = { IsEnabled: isEnabled };
+
+    this.userService.enableTwoFactor(twoFactor).subscribe(
+      () => {
+        this.toastr.success(
+          `Two-factor authentication ${isEnabled ? 'enabled' : 'disabled'}.`
+        );
+      },
+      (error) => {
+        this.toastr.error('Failed to update two-factor authentication.');
+        this.editDetailsForm.get('twoFactorEnabled')?.setValue(!isEnabled, {
+          emitEvent: false,
+        });
+      }
+    );
   }
 
   changePassword() {
@@ -110,7 +133,8 @@ export class EditComponent implements OnInit {
       this.editDetailsForm.patchValue({
         name: user.name,
         lastName: user.lastName,
-        dateOfBirth: user.dateOfBirth
+        dateOfBirth: user.dateOfBirth,
+        twoFactorEnabled: user.isTwoFactorEnabled
       });
     }
   }

@@ -106,7 +106,7 @@ namespace backend.Services
             {
                 return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Use Google SignIn." });
             }
-            if (!await _userManager.IsEmailConfirmedAsync(user) && !await _userManager.IsInRoleAsync(user, Roles.Admin))
+            if (!await _userManager.IsEmailConfirmedAsync(user))
             {
                 return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Please verify email address" });
             }

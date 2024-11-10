@@ -21,9 +21,10 @@ export class AuthService {
     return this.http.post<TokenDto>(this.baseUrl + 'auth', model).pipe(
       map((response: TokenDto) => {
         const tokenDto = response;
-        if (tokenDto) {
+        if (tokenDto.token) {
           this.setToken(tokenDto.token);
         }
+        return tokenDto
       })
     );
   }
@@ -35,6 +36,18 @@ export class AuthService {
         if (googleSignInDto.token){
           this.setToken(googleSignInDto.token)
         }
+      })
+    )
+  }
+
+  twoFactorAuth(model: any) {
+    return this.http.post<TokenDto>(this.baseUrl + 'auth/twofactor', model).pipe(
+      map((response: TokenDto) => {
+        const tokenDto = response;
+        if (tokenDto.token) {
+          this.setToken(tokenDto.token);
+        }
+        return tokenDto
       })
     )
   }

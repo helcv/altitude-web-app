@@ -31,6 +31,8 @@ namespace backend.Data
             };
 
             var result = await userManager.CreateAsync(admin, config["AdminSettings:Password"]);
+            admin.EmailConfirmed = true;
+            await userManager.UpdateAsync(admin);
 
             await userManager.AddToRoleAsync(admin, "Admin");
         }

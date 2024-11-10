@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CustomValidators } from '../_validators/custom-validators';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../_services/auth.service';
+import { TokenDto } from '../_models/tokenDto';
 
 @Component({
   selector: 'app-login',
@@ -34,8 +35,15 @@ export class LoginComponent implements OnInit{
 
   login() {
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.router.navigate(['/profile']);
+      next: (response: TokenDto) => {
+        if(response.is2FaRequired){
+          const email = this.loginForm.value.email;
+          this.router.navigate(['/auth/twofactor'], {
+            queryParams: { email }, 
+          });
+        }
+        else
+          this.router.navigate(['/profile']);
       },
       error: (error) => {
         const apiMessage = error.error?.message || ['Login failed'];

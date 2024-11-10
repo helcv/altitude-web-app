@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, model } from '@angular/core';
 import { CreateDto } from '../_models/createDto';
 import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { UserDto } from '../_models/userDto';
@@ -40,6 +40,14 @@ export class UserService {
 
     const headers = this.getAuthHeaders(token);
     return this.http.put<string>(this.baseUrl + 'profile/password', model, {headers})
+   }
+
+   enableTwoFactor(model: any) {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Token not found");
+
+    const headers = this.getAuthHeaders(token);
+    return this.http.put(this.baseUrl + 'auth/twofactor', model, {headers})
    }
 
   getProfile(): Observable<UserDto> {
