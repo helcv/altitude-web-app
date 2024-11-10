@@ -6,6 +6,7 @@ using backend.Helpers;
 using backend.Interfaces;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
@@ -17,13 +18,15 @@ namespace backend.Services
         private readonly UserManager<User> _userManager;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
         public UserService(IUserRepository userRepository, UserManager<User> userManager, 
-                IFileService fileService, IMapper mapper)
+                IFileService fileService, IMapper mapper, IEmailService emailService)
         {
             _mapper = mapper;
             _userRepository = userRepository; 
             _userManager = userManager;
             _fileService = fileService;
+            _emailService = emailService;
         }
         public async Task<CreateDto> CreateUserAsync(RegisterDto registerDto)
         {
@@ -62,6 +65,18 @@ namespace backend.Services
                return new CreateDto { Id = null, Messages = messages };
             }
 
+            var confirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(userToRegister);
+            var param = new Dictionary<string, string>
+            {
+                { "token", confirmToken },
+                { "email", userToRegister.Email }
+            };
+
+            var callback = QueryHelpers.AddQueryString(registerDto.ClientUri, param);
+            var message = new EmailMessageDto { Callback = callback, Email = userToRegister.Email, Subject = "Email confirmation token" };
+
+            await _emailService.SendEmail(message);
+
             var addToRole = await _userManager.AddToRoleAsync(userToRegister, Roles.User);
             if (!addToRole.Succeeded)
             {
@@ -69,7 +84,7 @@ namespace backend.Services
                 return new CreateDto { Id = null, Messages = messages };
             }
 
-            messages.Add("User successfully created!");
+            messages.Add("User successfully created, verify email address!");
             return new CreateDto { Id = userToRegister.Id, Messages = messages };
         }
 

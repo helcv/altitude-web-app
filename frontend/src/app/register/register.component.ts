@@ -57,9 +57,14 @@ export class RegisterComponent implements OnInit {
 
   register() {
     if (this.registerForm.valid) {
-      this.userService.register(this.registerForm.value).subscribe({
+      const registrationData = {
+        ...this.registerForm.value,
+        clientUri: `${window.location.origin}/auth/emailconfirmation`
+      };
+
+      this.userService.register(registrationData).subscribe({
         next: () => {
-          this.toastr.success('Registration successful!', 'Success');
+          this.toastr.success('Registration successful, please verify your email address!', 'Success');
           this.router.navigate(['/']);
         },
         error: (error) => {

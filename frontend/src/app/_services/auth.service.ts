@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, model } from '@angular/core';
 import { map } from 'rxjs';
 import { TokenDto } from '../_models/tokenDto';
@@ -37,6 +37,14 @@ export class AuthService {
         }
       })
     )
+  }
+
+  confirmEmail(token: string, email: string) {
+    const params = new HttpParams()
+      .set('token', token)
+      .set('email', email);
+  
+    return this.http.get(`${this.baseUrl}auth/emailconfirmation`, { params });
   }
 
   setToken (token : string){

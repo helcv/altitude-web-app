@@ -7,5 +7,6 @@ namespace backend.Interfaces
     {
         Task<Result<TokenDto, MessageDto>> LoginAsync(LoginDto loginDto);
         Task<GoogleSignInDto> GoogleSignIn(GoogleTokenDto googleTokenDto);
+        Task<bool> EmailConfirmationAsync(ConfirmEmailDto confirmEmailDto);
     }
 }

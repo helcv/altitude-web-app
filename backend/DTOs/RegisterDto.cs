@@ -12,7 +12,8 @@ namespace backend.DTOs
         public string Name { get; set; }
         [Required(ErrorMessage = "Last name is required.")]
         public string LastName { get; set; }
-        [Required(ErrorMessage ="Date of birth is required.")]
+        [Required(ErrorMessage = "Date of birth is required.")]
         public DateOnly? DateOfBirth { get; set; }
+        public string ClientUri { get; set; }
     }
 }

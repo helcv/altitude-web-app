@@ -59,6 +59,7 @@ namespace backend
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IAuthTokenHandler, AuthTokenHandler>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 
@@ -70,7 +71,8 @@ namespace backend
             })
                 .AddRoles<Role>()
                 .AddRoleManager<RoleManager<Role>>()
-                .AddEntityFrameworkStores<DataContext>();
+                .AddEntityFrameworkStores<DataContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
 
             builder.Services.AddCors(options =>
             {

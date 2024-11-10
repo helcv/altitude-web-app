@@ -1,8 +1,8 @@
 ﻿namespace backend.DTOs
 {
-    public class GoogleTokenDto
+    public class ConfirmEmailDto
     {
+        public string Email { get; set; }
         public string Token { get; set; }
-        public string ClientUri { get; set; }
     }
 }

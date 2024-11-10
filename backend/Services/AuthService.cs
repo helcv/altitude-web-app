@@ -3,7 +3,6 @@ using backend.DTOs;
 using backend.Entities;
 using backend.Interfaces;
 using CSharpFunctionalExtensions;
-using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +23,17 @@ namespace backend.Services
             _userManager = userManager;
             _tokenHandler = tokenHandler;
             _googleCredentials = config["GoogleAuth:ClientId"];
+        }
+
+        public async Task<bool> EmailConfirmationAsync(ConfirmEmailDto confirmEmailDto)
+        {
+            var user = await _userManager.FindByEmailAsync(confirmEmailDto.Email);
+            if (user == null) return false;
+
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, confirmEmailDto.Token);
+            if (!confirmResult.Succeeded) return false;
+
+            return true;
         }
 
         public async Task<GoogleSignInDto> GoogleSignIn(GoogleTokenDto googleTokenDto)
@@ -81,13 +91,18 @@ namespace backend.Services
             }
 
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
+
             if (user == null)
             {
                 return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Invalid email." });
             }
-            else if (user.PasswordHash == null)
+            if (user.PasswordHash == null)
             {
                 return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Use Google SignIn." });
+            }
+            if (!await _userManager.IsEmailConfirmedAsync(user) && !await _userManager.IsInRoleAsync(user, Roles.Admin))
+            {
+                return Result.Failure<TokenDto, MessageDto>(new MessageDto { Message = "Please verify email address" });
             }
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);

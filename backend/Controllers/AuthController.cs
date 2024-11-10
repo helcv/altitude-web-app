@@ -32,5 +32,14 @@ namespace backend.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("emailconfirmation")]
+        public async Task<IActionResult> EmailConfirmationAsync([FromQuery] ConfirmEmailDto confirmEmailDto)
+        {
+            var result = await _authService.EmailConfirmationAsync(confirmEmailDto);
+            if (!result) return BadRequest("Invalid Email Confirmation Request");
+
+            return Ok();
+        }
     }
 }
